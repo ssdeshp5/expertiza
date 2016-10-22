@@ -348,6 +348,7 @@ Expertiza::Application.routes.draw do
       get :add_signup_topics_staggered
       get :delete_signup
       get :edit
+      get :remove_team
       get :list
       get :signup_topics
       get :signup

@@ -81,6 +81,23 @@ class SignUpSheetController < ApplicationController
     redirect_to edit_assignment_path(params[:assignment_id]) + "#tabs-5"
   end
 
+  def find_team
+    @topic = SignUpTopic.find(params[:id])
+    @user = User.find_by_login(params[:email])
+    team_id = TeamsUser.team_id(params[:assignment_id].to_i, @user.id)
+  end
+
+  def remove_team
+    assignment = Assignment.find(params[:assignment_id])
+    @user = User.find_by_login(params[:email])
+    participant = AssignmentParticipant.where('user_id = ? and parent_id = ?', @user.id, params[:assignment_id]).first
+
+    #delete_signup_for_topic(params[:assignment_id], params[:id])
+    SignUpTopic.reassign_topic(@user.id, assignment_id, topic_id)
+    flash[:success] = 'You have successfully dropped your topic!'
+    redirect_to action: 'list', assignment_id: params[:assignment_id]
+  end
+
   # prepares the page. shows the form which can be used to enter new values for the different properties of an assignment
   def edit
     @topic = SignUpTopic.find(params[:id])
